@@ -10,31 +10,37 @@
   <div class="form-container">
     <h2>Contactez-nous</h2>
     
-    <!-- Notre formulaire -->
-    <form id="contact-form">
+    <!-- Ajout de name="contact" et netlify -->
+    <form id="contact-form" name="contact" netlify>
+      
+      <!-- Champ caché technique nécessaire pour le JS avec Netlify -->
+      <input type="hidden" name="form-name" value="contact" />
+
       <div>
         <label for="name">Nom :</label>
-        <input type="text" id="name" required>
+
+        <input type="text" id="name" name="name" required>
       </div>
 
       <div>
         <label for="email">Email :</label>
-        <input type="email" id="email" required>
+
+        <input type="email" id="email" name="email" required>
       </div>
 
       <div>
         <label for="message">Message :</label>
-        <textarea id="message" required></textarea>
+
+        <textarea id="message" name="message" required></textarea>
       </div>
 
       <button type="submit" id="submit-btn">Envoyer</button>
     </form>
 
-    <!-- Zone pour afficher le statut à l'utilisateur -->
+    <!-- Zone d'affichage du statut -->
     <div id="status-message"></div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
