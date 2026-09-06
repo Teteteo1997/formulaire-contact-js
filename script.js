@@ -5,34 +5,36 @@ const statusMessage = document.getElementById('status-message');
 contactForm.addEventListener('submit', async function (event) {
   event.preventDefault();
 
-  // --- ÉTAT 1 : Chargement en cours ---
+  // 1. Indiquer à l'utilisateur que l'envoi est en cours
   showStatus('Envoi de votre message en cours...', 'info');
   submitBtn.disabled = true;
 
-  // Préparation des données du formulaire pour Netlify
+  // 2. Récupérer les données du formulaire
   const formData = new FormData(contactForm);
+  
+  // 3. Ajouter la clé Web3Forms
+  formData.append("access_key", "c7f24781-6bcc-4aaa-bfb7-a51dce30b452");
 
   try {
-    // On envoie la requête directement à Netlify (à la racine "/")
-    const response = await fetch('/', {
-      method: 'POST',
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(formData).toString()
+    // 4. Envoyer les données à Web3Forms
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
     });
 
-    if (!response.ok) {
-      throw new Error('Erreur lors de l’envoi à Netlify.');
+    const data = await response.json();
+
+    if (data.success) {
+      // Succès : affichage du message vert et nettoyage du formulaire
+      showStatus('Votre message a bien été envoyé ! Vérifiez votre boîte mail.', 'success');
+      contactForm.reset();
+    } else {
+      throw new Error(data.message);
     }
 
-    // --- ÉTAT 2 : Succès ---
-    showStatus('Votre message a bien été reçu par Netlify !', 'success');
-    contactForm.reset();
-
   } catch (error) {
-    // --- ÉTAT 3 : Erreur ---
     console.error('Détails de l’erreur :', error);
     showStatus('Une erreur est survenue lors de l’envoi.', 'error');
-
   } finally {
     submitBtn.disabled = false;
   }
